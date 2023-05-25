@@ -45,19 +45,21 @@ def read_root():
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
-@app.get("/stuff/")
-def list_stuff(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    stuff_list = crud.get_stuff_list(db, skip=skip, limit=limit)
-    return stuff_list
+@app.get("/in-items/")
+def list_in_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    in_item_list = crud.get_in_item_list(db, skip=skip, limit=limit)
+    return in_item_list
 
 
-@app.get("/stuff/{stuff_id}")
-def read_stuff(stuff_id: int, db: Session = Depends(get_db)):
-    stuff = crud.get_stuff(db, stuff_id)
-    if stuff is None:
-        raise HTTPException(status_code=404, detail="Stuff not found")
+@app.get("/in-items/{in_item_id}")
+def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
+    print(f"fetching in-item with id {in_item_id}")
+    in_item = crud.get_in_item(db, in_item_id)
+    print(f"found {in_item}")
+    if in_item is None:
+        raise HTTPException(status_code=404, detail="In Item not found")
 
-    return stuff
+    return in_item
 
 """
 @app.get("/users/", response_model=list[schemas.User])

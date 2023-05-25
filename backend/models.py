@@ -4,8 +4,8 @@ from sqlalchemy.sql import func
 
 from database import Base
 
-class Stuff(Base):
-    __tablename__ = "stuff"
+class InItem(Base):
+    __tablename__ = "in_item"
 
     id = Column(Integer, primary_key=True)
     description = Column(String(200), nullable=False)

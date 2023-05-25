@@ -1,5 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
+
+import InItem from './components/InItem';
 
 import './App.css';
 
@@ -27,26 +28,8 @@ function App() {
 */
 
 function App() {
-    const [value, setValue] = useState('*loading*');
-    
-    useEffect(() => {
-        axios.get('http://localhost:8000/')
-	    .then(function (response) {
-		// handle success
-		console.log(response);
-		setValue(response.data['Hello']);
-	    })
-	    .catch(function (error) {
-		// handle error
-		console.log(error);
-	    })
-	    .finally(function () {
-		// always executed
-	    });
-    }, []);
-    
     return (
-        <p>Hello, {value}</p>
+        <InItem inItemId='1' />
     );
 }
 

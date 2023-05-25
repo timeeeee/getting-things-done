@@ -4,12 +4,12 @@ import models
 import schemas
 
 
-def get_stuff(db: Session, stuff_id: int):
-    return db.query(models.Stuff).filter(models.Stuff.id == stuff_id).first()
+def get_in_item(db: Session, in_item_id: int):
+    return db.query(models.InItem).filter(models.InItem.id == in_item_id).first()
 
 
-def get_stuff_list(db: Session, skip: int = 0, limit: int=100):
-    return db.query(models.Stuff).offset(skip).limit(limit).all()
+def get_in_item_list(db: Session, skip: int = 0, limit: int=100):
+    return db.query(models.InItem).offset(skip).limit(limit).all()
 
 
 """
