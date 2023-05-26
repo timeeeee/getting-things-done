@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InItem from './components/InItem';
+import InItemList from './components/InItemList';
 
 import './App.css';
 
@@ -29,7 +29,10 @@ function App() {
 
 function App() {
     return (
-        <InItem inItemId='1' />
+	<>
+	    <h1>Stuff to process:</h1>
+            <InItemList />
+	</>
     );
 }
 

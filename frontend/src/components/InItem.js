@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
 
-function InItem({inItemId}) {
+/* function InItem({inItemId}) {
     const [isLoading, setIsLoading] = useState(true);
     const [inItem, setInItem] = useState();
     
@@ -17,5 +16,10 @@ function InItem({inItemId}) {
 	<div className='in-item'>{isLoading ? 'loading' : inItem.description}</div>
     );
 };
+*/
+
+function InItem({description}) {
+    return <div className='in-item'>{description}</div>;
+}
 
 export default InItem;
