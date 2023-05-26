@@ -1,7 +1,8 @@
-from typing import Union
+from typing import Union, List
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
 from database import SessionLocal
@@ -35,17 +36,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/", include_in_schema=False)
+def docs_redirect():
+    return RedirectResponse(url='/docs')
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.get("/in-items/")
+@app.get("/in-items/", response_model=List[schemas.InItem])
 def list_in_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     in_item_list = crud.get_in_item_list(db, skip=skip, limit=limit)
     return in_item_list
@@ -60,6 +56,12 @@ def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="In Item not found")
 
     return in_item
+
+
+@app.post("/in-items/", response_model=schemas.InItem)
+def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db)):
+    result = crud.create_in_item(db, in_item)
+    return result
 
 """
 @app.get("/users/", response_model=list[schemas.User])

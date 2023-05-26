@@ -1,21 +1,21 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
 
-class StuffBase(BaseModel):
-    id: int
+class InItemBase(BaseModel):
     description: str
 
 
-class StuffCreate(StuffBase):
+class InItemCreate(InItemBase):
     pass
 
 
-class Stuff(StuffBase):
+class InItem(InItemBase):
     id: int
     created_at: datetime
-    processed_at: datetime
+    processed_at: Optional[datetime]
 
     class Config:
         orm_mode = True

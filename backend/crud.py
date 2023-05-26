@@ -12,6 +12,14 @@ def get_in_item_list(db: Session, skip: int = 0, limit: int=100):
     return db.query(models.InItem).offset(skip).limit(limit).all()
 
 
+def create_in_item(db: Session, in_item: schemas.InItemCreate):
+    db_item = models.InItem(description=in_item.description)
+    db.add(db_item)
+    db.commit()
+    db.refresh(db_item)
+    return db_item
+
+
 """
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
