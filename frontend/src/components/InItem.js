@@ -18,8 +18,8 @@ import React from 'react';
 };
 */
 
-function InItem({description}) {
-    return <div className='in-item'>{description}</div>;
+function InItem({description, id}) {
+    return <li className='in-item' key={id}>{description}</li>;
 }
 
 export default InItem;
