@@ -1,39 +1,21 @@
 import React from 'react';
 
-import InItemList from './components/InItemList';
+// import InItemList from './components/InItemList';
+import Project from './components/Project';
 
 import './App.css';
 
-/*
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-*/
 
 function App() {
-    return (
+  return (
 	<>
-	    <h1>Stuff to process:</h1>
-            <InItemList />
+    {
+      // <InItemList />
+    }
+    
+    <Project projectId='1' />
 	</>
-    );
+  );
 }
 
 export default App;
