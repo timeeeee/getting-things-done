@@ -63,6 +63,27 @@ def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db))
     result = crud.create_in_item(db, in_item)
     return result
 
+
+@app.get("/projects/")
+def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return crud.get_project_list(db, skip=skip, limit=limit)
+
+
+@app.get("/projects/{project_id}")
+def read_project(project_id: int, db: Session = Depends(get_db)):
+    project = crud.get_project(db, project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return project
+
+@app.post("/projects/")
+def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):
+    result = crud.create_project(db, project)
+    return result
+
+
+
 """
 @app.get("/users/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
