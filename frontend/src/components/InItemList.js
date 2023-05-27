@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 
-import InItem from './InItem';
+function InItem({description, id}) {
+    return <li className='in-item' key={id}>{description}</li>;
+}
 
 function InItemList() {
     const [isLoading, setIsLoading] = useState(true);
