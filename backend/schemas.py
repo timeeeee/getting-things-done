@@ -13,6 +13,10 @@ class InItemCreate(InItemBase):
     pass
 
 
+class InItemPut(InItemBase):
+    pass
+
+
 class InItem(InItemBase):
     id: int
     created_at: datetime
@@ -30,6 +34,10 @@ class ProjectBase(BaseModel):
 
 
 class ProjectCreate(ProjectBase):
+    pass
+
+
+class ProjectPut(ProjectBase):
     pass
 
 

@@ -58,10 +58,18 @@ def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
     return in_item
 
 
-@app.post("/in-items/", response_model=schemas.InItem)
+@app.post("/in-items/", response_model=schemas.InItem, status_code=201)
 def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db)):
     result = crud.create_in_item(db, in_item)
     return result
+
+
+@app.put("/in-items/{in_item_id}", status_code=204)
+def update_in_item(in_item_id: int, in_item: schemas.InItemPut, db: Session = Depends(get_db)):
+    try:
+        crud.update_in_item(db, in_item_id, in_item)
+    except ValueError as e:
+        return HTTPException(400)
 
 
 @app.get("/projects/")
@@ -77,10 +85,18 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
 
     return project
 
-@app.post("/projects/")
+@app.post("/projects/", response_model=schemas.Project, status_code=201)
 def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):
     result = crud.create_project(db, project)
     return result
+
+
+@app.put("/project/{project_id}", status_code=204)
+def update_project(project_id: int, project: schemas.ProjectPut, db: Session = Depends(get_db)):
+    try:
+        crud.update_project(db, project_id, project)
+    except ValueError as e:
+        return HTTPException(400)
 
 
 
