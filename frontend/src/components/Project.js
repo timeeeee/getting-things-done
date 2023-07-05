@@ -21,6 +21,7 @@ function Project({projectId}) {
             <div>created {data.created_at}</div>
             <div>status: {data.bucket}</div>
             <div>next step: {data.next_step}</div>
+            <div>notes: {data.notes}</div>
         </>
     );
 }
