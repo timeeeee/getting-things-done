@@ -1,0 +1,7 @@
+models "back_populates"
+project has context
+project has next task
+can see all next tasks (by context?)
+rename foreign key columns "something_id" in the model?
+users
+deployment
