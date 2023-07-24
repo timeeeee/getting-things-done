@@ -75,6 +75,14 @@ def update_in_item(in_item_id: int, in_item: schemas.InItemUpdate, db: Session =
         return HTTPException(400)
 
 
+@app.delete("/in-items/{in_item_id}", status_code=204)
+def delete_in_item(in_item_id: int, db: Session = Depends(get_db)):
+    try:
+        return crud.delete_in_item(db, in_item_id)
+    except ValueError as e:
+        return HttpException(400)
+
+
 @app.get("/projects/")
 def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.get_project_list(db, skip=skip, limit=limit)

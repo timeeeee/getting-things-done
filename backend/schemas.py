@@ -28,8 +28,7 @@ class InItemUpdate(InItemBase):
     processed_at: Optional[datetime]
 
 
-class InItemDelete(BaseModel):
-    id: int
+# do I need a schema for deleting this?
 
 
 class ProjectBase(BaseModel):
