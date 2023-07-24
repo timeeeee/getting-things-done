@@ -7,7 +7,6 @@ import schemas
 def get_in_item(db: Session, in_item_id: int):
     return db.query(models.InItem).filter(models.InItem.id == in_item_id).first()
 
-
 def get_in_item_list(db: Session, skip: int=0, limit: int=100):
     return db.query(models.InItem).offset(skip).limit(limit).all()
 
@@ -20,7 +19,7 @@ def create_in_item(db: Session, in_item: schemas.InItemCreate):
     return db_item
 
 
-def update_in_item(db: Session, in_item_id: int, in_item: schemas.InItemPut):
+def update_in_item(db: Session, in_item_id: int, in_item: schemas.InItemUpdate):
     """
     For now this will raise a ValueError if the id doesn't refer to an existing in-item
     """
@@ -32,6 +31,8 @@ def update_in_item(db: Session, in_item_id: int, in_item: schemas.InItemPut):
         setattr(db_item, key, value)
 
     db.commit()
+
+    return db_item
 
 
 def get_project(db: Session, project_id: int):

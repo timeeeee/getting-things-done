@@ -41,13 +41,13 @@ def docs_redirect():
     return RedirectResponse(url='/docs')
 
 
-@app.get("/in-items/", response_model=List[schemas.InItem])
+@app.get("/in-items/", response_model=List[schemas.InItemRead])
 def list_in_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     in_item_list = crud.get_in_item_list(db, skip=skip, limit=limit)
     return in_item_list
 
 
-@app.get("/in-items/{in_item_id}")
+@app.get("/in-items/{in_item_id}", response_model=schemas.InItemRead)
 def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
     print(f"fetching in-item with id {in_item_id}")
     in_item = crud.get_in_item(db, in_item_id)
@@ -58,16 +58,19 @@ def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
     return in_item
 
 
-@app.post("/in-items/", response_model=schemas.InItem, status_code=201)
+@app.post("/in-items/", response_model=schemas.InItemRead, status_code=201)
 def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db)):
     result = crud.create_in_item(db, in_item)
     return result
 
 
-@app.put("/in-items/{in_item_id}", status_code=204)
-def update_in_item(in_item_id: int, in_item: schemas.InItemPut, db: Session = Depends(get_db)):
+# do I need a status code?
+# could also be 204 "no content"
+# @app.put("/in-items/{in_item_id}", status_code=200)
+@app.put("/in-items/{in_item_id}", response_model=schemas.InItemRead)
+def update_in_item(in_item_id: int, in_item: schemas.InItemUpdate, db: Session = Depends(get_db)):
     try:
-        crud.update_in_item(db, in_item_id, in_item)
+        return crud.update_in_item(db, in_item_id, in_item)
     except ValueError as e:
         return HTTPException(400)
 

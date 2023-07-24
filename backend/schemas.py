@@ -13,17 +13,23 @@ class InItemCreate(InItemBase):
     pass
 
 
-class InItemPut(InItemBase):
-    pass
-
-
-class InItem(InItemBase):
+class InItemRead(InItemBase):
     id: int
     created_at: datetime
     processed_at: Optional[datetime]
 
+    # I'm not sure why to do this. seems like otherwise pydantic tries
+    # to convert the object to a dict?
     class Config:
         orm_mode = True
+
+
+class InItemUpdate(InItemBase):
+    processed_at: Optional[datetime]
+
+
+class InItemDelete(BaseModel):
+    id: int
 
 
 class ProjectBase(BaseModel):
