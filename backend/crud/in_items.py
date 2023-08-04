@@ -41,7 +41,7 @@ def delete_in_item(db: Session, in_item_id: int):
     """
     db_item = db.query(models.InItem).filter(models.InItem.id == in_item_id)
     if db_item is None:
-        raise ValueError(f"no in-item with id in {in_item_id}")
+        raise ValueError(f"no in-item with id {in_item_id}")
 
     db_item.delete()
     db.commit()

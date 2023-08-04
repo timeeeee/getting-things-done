@@ -22,11 +22,22 @@ def create_project(db: Session, project: schemas.ProjectCreate):
 
 
 def update_project(db: Session, project_id: int, project: schemas.ProjectPut):
-    db_item = db.query(models.Project).filter(models.Project.id == project_id).first()
-    if db_item is None:
+    db_project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    if db_project is None:
         raise ValueError(f"no project with id {project_id}")
 
     for key, value in project.dict().items():
         setattr(db_item, key, value)
 
+    db.commit()
+
+    return db_project
+
+
+def delete_project(db: Session, project_id: int):
+    db_project = db.query(models.Project).filter(models.Project.id == project_id)
+    if db_project is None:
+        raise ValueError(f"no project with id {project_id}")
+
+    db_project.delete()
     db.commit()

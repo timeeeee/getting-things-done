@@ -43,14 +43,14 @@ def docs_redirect():
 
 @app.get("/in-items/", response_model=List[schemas.InItemRead])
 def list_in_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    in_item_list = crud.get_in_item_list(db, skip=skip, limit=limit)
+    in_item_list = crud.in_items.get_in_item_list(db, skip=skip, limit=limit)
     return in_item_list
 
 
 @app.get("/in-items/{in_item_id}", response_model=schemas.InItemRead)
 def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
     print(f"fetching in-item with id {in_item_id}")
-    in_item = crud.get_in_item(db, in_item_id)
+    in_item = crud.in_items.get_in_item(db, in_item_id)
     print(f"found {in_item}")
     if in_item is None:
         raise HTTPException(status_code=404, detail="In Item not found")
@@ -60,7 +60,7 @@ def read_in_item(in_item_id: int, db: Session = Depends(get_db)):
 
 @app.post("/in-items/", response_model=schemas.InItemRead, status_code=201)
 def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db)):
-    result = crud.create_in_item(db, in_item)
+    result = crud.in_items.create_in_item(db, in_item)
     return result
 
 
@@ -70,7 +70,7 @@ def create_in_item(in_item: schemas.InItemCreate, db: Session = Depends(get_db))
 @app.put("/in-items/{in_item_id}", response_model=schemas.InItemRead)
 def update_in_item(in_item_id: int, in_item: schemas.InItemUpdate, db: Session = Depends(get_db)):
     try:
-        return crud.update_in_item(db, in_item_id, in_item)
+        return crud.in_items.update_in_item(db, in_item_id, in_item)
     except ValueError as e:
         return HTTPException(400)
 
@@ -78,19 +78,19 @@ def update_in_item(in_item_id: int, in_item: schemas.InItemUpdate, db: Session =
 @app.delete("/in-items/{in_item_id}", status_code=204)
 def delete_in_item(in_item_id: int, db: Session = Depends(get_db)):
     try:
-        return crud.delete_in_item(db, in_item_id)
+        return crud.in_items.delete_in_item(db, in_item_id)
     except ValueError as e:
         return HttpException(400)
 
 
 @app.get("/projects/")
 def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return crud.get_project_list(db, skip=skip, limit=limit)
+    return crud.projects.get_project_list(db, skip=skip, limit=limit)
 
 
 @app.get("/projects/{project_id}")
 def read_project(project_id: int, db: Session = Depends(get_db)):
-    project = crud.get_project(db, project_id)
+    project = crud.projects.get_project(db, project_id)
     if project is None:
         raise HTTPException(status_code=404, detail="Project not found")
 
@@ -98,14 +98,14 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
 
 @app.post("/projects/", response_model=schemas.Project, status_code=201)
 def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):
-    result = crud.create_project(db, project)
+    result = crud.projects.create_project(db, project)
     return result
 
 
 @app.put("/project/{project_id}", status_code=204)
 def update_project(project_id: int, project: schemas.ProjectPut, db: Session = Depends(get_db)):
     try:
-        crud.update_project(db, project_id, project)
+        crud.projects.update_project(db, project_id, project)
     except ValueError as e:
         return HTTPException(400)
 
