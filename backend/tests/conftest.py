@@ -32,7 +32,7 @@ def clean_up_old_test_db():
 """
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def test_client():
     Base.metadata.create_all(bind=engine)
     db = TestingSession()
@@ -40,6 +40,6 @@ def test_client():
     db.close()
 
     try:
-        yield client
+        yield
     finally:
         Base.metadata.drop_all(bind=engine)
