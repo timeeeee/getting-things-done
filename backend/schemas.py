@@ -33,9 +33,9 @@ class InItemUpdate(InItemBase):
 
 class ProjectBase(BaseModel):
     name: str
-    notes: str
+    notes: Optional[str]
     bucket: BucketEnum
-    next_step: str
+    next_step: Optional[str]
 
 
 class ProjectCreate(ProjectBase):
