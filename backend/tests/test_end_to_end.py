@@ -4,8 +4,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from main import app, get_db
 from database import Base
-
-SQLALCHEMY_TEST_DATABASE_URL = "mysql://gtd_test:gtd_test@172.22.80.1/gtd_test"
+from settings import SQLALCHEMY_TEST_DATABASE_URL
 
 engine = create_engine(SQLALCHEMY_TEST_DATABASE_URL)
 SessionTest = sessionmaker(autocommit=False, autoflush=False, bind=engine)
