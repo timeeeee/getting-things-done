@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from tests.conftest import client
 
 # =====
@@ -50,8 +52,42 @@ def test_create_item():
     assert data["description"] == description
 
 
-def test_update_item():
-    raise NotImplementedError
+def test_change_item_description():
+    treachery = "Ceci n'est pas une item"
+    data = {"description": treachery}
+    response = client.put("/in-items/1", json=data)
+    assert response.status_code == 200
+
+    # is the response data correct
+    data = response.json()
+    assert data["description"] == treachery
+    assert data["processed_at"] is None
+
+    # did it get saved
+    data = client.get("/in-items/1").json()
+    assert data["description"] == treachery
+    assert data["processed_at"] is None
+
+
+def test_process_item():
+    description = "this is an in item"
+    processed_string = "2023-08-05T12:49:32"
+    processed_ts = datetime.fromisoformat(processed_string)
+    data = {
+        "description": description,
+        "processed_at": processed_string
+    }
+    response = client.put("/in-items/1", json=data)
+    assert response.status_code == 200
+    data = response.json()
+    
+    assert data["description"] == description
+    assert datetime.fromisoformat(data["processed_at"]) == processed_ts
+
+    data = client.get("/in-items/1").json()
+    assert data["description"] == description
+    assert datetime.fromisoformat(data["processed_at"]) == processed_ts    
+    
 
 
 def test_delete_item():
