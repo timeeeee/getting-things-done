@@ -143,7 +143,7 @@ def test_get_project():
     assert data["bucket"] == "active"
     assert data["next_step"] == "test"
     assert data["created_at"] is not None
-    assert data["updated_at"] is not None
+    assert data["updated_at"] is None
 
 
 def test_create_project():
@@ -164,7 +164,7 @@ def test_create_project():
     assert set(data.keys()) == set(expected_keys)
     assert data["id"] is not None
     assert data["created_at"] is not None
-    assert data["updated_at"] is not None
+    assert data["updated_at"] is None
     assert data["name"] == project["name"]
     assert data["notes"] == project["notes"]
     assert data["bucket"] == "maybe"
@@ -178,7 +178,7 @@ def test_create_project():
     assert set(data.keys()) == set(expected_keys)
     assert data["id"] is not None
     assert data["created_at"] is not None
-    assert data["updated_at"] is not None
+    assert data["updated_at"] is None
     assert data["name"] == project["name"]
     assert data["notes"] == project["notes"]
     assert data["bucket"] == "maybe"
@@ -186,7 +186,24 @@ def test_create_project():
 
 
 def test_update_project():
-    raise NotImplementedError
+    previous_ts = client.get("/projects/1").json()["updated_at"]
+
+    data = {
+        "name": "lower case getting things done",
+        "notes": None,
+        "bucket": "complete",
+        "next_step": "get things done"
+    }
+    response = client.put("/projects/1", json=data)
+    assert response.status_code == 200
+    response_data = response.json()
+
+    for key, value in data.items():
+        assert response_data[key] == value
+
+    response_data = client.get("/projects/1").json()
+    for key, value in data.items():
+        assert response_data[key] == value
 
 
 def test_delete_project():

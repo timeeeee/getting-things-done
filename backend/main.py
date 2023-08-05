@@ -83,12 +83,12 @@ def delete_in_item(in_item_id: int, db: Session = Depends(get_db)):
         return HttpException(400)
 
 
-@app.get("/projects/")
+@app.get("/projects/", response_model=List[schemas.ProjectRead])
 def list_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return crud.projects.get_project_list(db, skip=skip, limit=limit)
 
 
-@app.get("/projects/{project_id}")
+@app.get("/projects/{project_id}", response_model=schemas.ProjectRead)
 def read_project(project_id: int, db: Session = Depends(get_db)):
     project = crud.projects.get_project(db, project_id)
     if project is None:
@@ -96,18 +96,27 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
 
     return project
 
-@app.post("/projects/", response_model=schemas.Project, status_code=201)
+
+@app.post("/projects/", response_model=schemas.ProjectRead, status_code=201)
 def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):
     result = crud.projects.create_project(db, project)
     return result
 
 
-@app.put("/project/{project_id}", status_code=204)
-def update_project(project_id: int, project: schemas.ProjectPut, db: Session = Depends(get_db)):
+@app.put("/projects/{project_id}", response_model=schemas.ProjectRead)
+def update_project(project_id: int, project: schemas.ProjectUpdate, db: Session = Depends(get_db)):
     try:
-        crud.projects.update_project(db, project_id, project)
+        return crud.projects.update_project(db, project_id, project)
     except ValueError as e:
         return HTTPException(400)
+
+
+@app.delete("/projects/{project_id}", status_code=204)
+def delete_project(project_id: int, db: Session = Depends(get_db)):
+    try:
+        return crud.projects.delete_project(db, project_id)
+    except ValueError as e:
+        return HttpException(400)
 
 
 

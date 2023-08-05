@@ -38,15 +38,18 @@ class ProjectBase(BaseModel):
     next_step: Optional[str]
 
 
+class ProjectRead(ProjectBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime]
+
+    class Config:
+        orm_mode = True
+
+
 class ProjectCreate(ProjectBase):
     pass
 
 
-class ProjectPut(ProjectBase):
+class ProjectUpdate(ProjectBase):
     pass
-
-
-class Project(ProjectBase):
-    id: int
-    created_at: datetime
-    updated_at: datetime
