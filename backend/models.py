@@ -8,10 +8,10 @@ from database import Base
 
 # these should be pretty much static!
 class BucketEnum(enum.Enum):
-    trash = 0
-    maybe = 1
-    active = 2
-    complete = 3
+    trash = "trash"
+    maybe = "maybe"
+    active = "active"
+    complete = "complete"
 
 
 class InItem(Base):
