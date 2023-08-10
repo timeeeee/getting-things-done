@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { useFetcher } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
+import { useFetcher, useLoaderData } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -30,16 +30,53 @@ export async function createInItemAction({ params, request }) {
 }
 
 
+export async function updateInItemAction({ params, request }) {
+	const formData = await request.formData();
+	console.log(formData);
+	
+	const response = await axios.put(
+		`http://localhost:8000/in-items/${formData.get("id")}`,
+		{description: formData.get("description")}
+	);
+	const item = await response.data;
+	return { item };
+}
+
+
 // todo: add 'is saving'
 function InItem({description, id}) {
-	return <li className='in-item' key={id}>{description}</li>;
+	const [isProcessing, setIsProcessing] = useState(false);
+
+	const fetcher = useFetcher();
+
+	useEffect(() => {
+		if (fetcher.state === 'submitting') {
+			setIsProcessing(false);
+		}
+	}, [fetcher])
+
+	if (!isProcessing) return (
+		<li className='in-item' key={id}>
+			<div>{description}</div>
+			<button onClick={() => setIsProcessing(true)} disabled={(fetcher.state === 'submitting')}>Process</button>
+		</li>
+	);
+
+	return (
+		<fetcher.Form method='post' action={`/in-items/update`} >
+			<input type='text' name='description' defaultValue={description} />
+			<input type='hidden' name='id' defaultValue={id} />
+			<input type='button' name='delete' value='delete' />
+			<input type='button' name='cancel' onClick={() => setIsProcessing(false)} value='cancel' />
+			<input type='submit' />
+		</fetcher.Form>
+	);
 }
 
 
 function InItemList() {
+	const { inItems } = useLoaderData();
 	const fetcher = useFetcher();
-
-	// const [uploadError, setUploadError] = useState();
 
 	const formRef = useRef(null);
 	const descriptionInputRef = useRef(null);
@@ -51,42 +88,22 @@ function InItemList() {
 
 		// load?
 		if (fetcher.state === 'idle' && !fetcher.data) {
-			console.log("calling load");
+			// what does this do now that it only loads data for the form?
 			fetcher.load()
 		}
 
 		const element = descriptionInputRef.current;
 		if (element !== null) {
 			element.scrollIntoView({ behavior: "smooth" });
+			element.value = '';
 			element.focus();
 		}
 	}, [fetcher]);
 
-	/*
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		setIsInputDisabled(true);
-		axios.post('http://localhost:8000/in-items', {'description': event.target.description.value})
-		.then(response => {
-			setIsInputDisabled(true);
-			setInItems([...inItems, response.data]);
-			formRef.current.reset();
-		})
-		.catch(error => {
-			setUploadError(error);
-		})
-		.finally(() => {
-			setIsInputDisabled(false);
-		});
-	}
-	*/
-
-	if (fetcher.state === 'loading' || fetcher.data == undefined) return <p>loading...</p>;
-
 	return (
 		<>
 			<ul>
-				{fetcher.data.inItems.map(item => <InItem description={item.description} key={item.id} />)}
+				{inItems.map(item => <InItem description={item.description} id={item.id} key={item.id} />)}
 			</ul>
 			
 			<fetcher.Form method='post' action='/in-items/create' ref={formRef}>

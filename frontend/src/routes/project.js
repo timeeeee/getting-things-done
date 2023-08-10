@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 
 
-function Project({projectId}) {
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isEditing, setIsEditing] = useState(false);
+export async function projectLoader(data) {
+    const projectId = data.params.projectId;
+    const response = await axios.get(`http://localhost:8000/projects/${projectId}`);
+    const project = response.data;
+    return { project };
+}
 
-    useEffect(() => {
-		axios.get(`http://localhost:8000/projects/${projectId}`)
-		.then(response => {
-			setIsLoading(false);
-            setData(response.data);
-	    });
-    }, []);
+
+function Project({projectId}) {
+    const { project } = useLoaderData();
+
+    const [ isEditing, setIsEditing ] = useState(false);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -24,40 +25,36 @@ function Project({projectId}) {
         event.preventDefault();
 
         setIsEditing(false);
-        setIsLoading(true);
         
         const putData = {
             name: event.target.name.value,
             notes: event.target.notes.value,
-            bucket: data.bucket,
+            bucket: project.bucket,
             next_step: event.target.next_step.value,
         };
 
         axios.put(`http://localhost:8000/projects/${projectId}`, putData)
         .then(response => {
-            setIsLoading(false);
             setData(response.data);
         });
     }
-
-    if (isLoading) return <p>loading...</p>;
 
     if (isEditing) {
         return (
              <form method='put' onSubmit={handleSave}>
                 <label>
                     Name:
-                    <input type='text' name='name' defaultValue={data.name} />
+                    <input type='text' name='name' defaultValue={project.name} />
                 </label>
                 
                 <label>
                     Next step:
-                    <input type='text' name='next_step' defaultValue={data.next_step} />
+                    <input type='text' name='next_step' defaultValue={project.next_step} />
                 </label>
                 
                 <label>
                     Notes:
-                    <textarea name='notes' defaultValue={data.notes} />
+                    <textarea name='notes' defaultValue={project.notes} />
                 </label>
                 
                 <button type='submit'>Save</button>
@@ -66,11 +63,11 @@ function Project({projectId}) {
     } else {
         return (
             <>
-                <h1>Project: {data.name}</h1>
-                <div>created {data.created_at}</div>
-                <div>status: {data.bucket}</div>
-                <div>next step: {data.next_step}</div>
-                <div>notes: <ReactMarkdown>{data.notes}</ReactMarkdown></div>
+                <h1>Project: {project.name}</h1>
+                <div>created {project.created_at}</div>
+                <div>status: {project.bucket}</div>
+                <div>next step: {project.next_step}</div>
+                <div>notes: <ReactMarkdown>{project.notes}</ReactMarkdown></div>
                 <button onClick={handleEdit}>edit</button>
             </>
         );

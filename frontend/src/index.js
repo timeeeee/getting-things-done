@@ -1,13 +1,61 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+import Root from './routes/root';
+import InItemList, { inItemListLoader, createInItemAction, updateInItemAction } from './routes/inItems';
+import ProjectList, { projectListLoader } from './routes/projects';
+import Project, { projectLoader } from './routes/project';
+
+import ErrorPage from './error-page';
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    // loader: rootLoader,
+    children: [
+      {
+        path: "/in-items/",
+        element: <InItemList />,
+        loader: inItemListLoader,
+        children: [
+          {
+            path: "/in-items/create/",
+            action: createInItemAction,
+          },
+          {
+            path: "/in-items/update/",
+            action: updateInItemAction,
+          }
+        ]
+      },
+      {
+        path: "/projects/",
+        loader: projectListLoader,
+        element: <ProjectList />,
+      },
+      {
+        path: "/projects/:projectId",
+        loader: projectLoader,
+        element: <Project />,
+      }
+    ],
+  },
+]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
