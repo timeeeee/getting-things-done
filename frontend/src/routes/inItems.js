@@ -11,12 +11,6 @@ export async function inItemListLoader() {
 
 
 export async function createInItemAction({ params, request }) {
-	// clear the input
-
-	console.log("action params:");
-	console.log(params);
-	console.log("action request");
-	console.log(request);
 	console.log("formData:");
 	const formData = await request.formData();
 	console.log(formData);

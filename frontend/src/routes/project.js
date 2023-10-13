@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useFetcher } from 'react-router-dom';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 
 
+// get projectId as argument instead?
 export async function projectLoader(data) {
     const projectId = data.params.projectId;
     const response = await axios.get(`http://localhost:8000/projects/${projectId}`);
@@ -12,40 +13,55 @@ export async function projectLoader(data) {
 }
 
 
-function Project({projectId}) {
-    const { project } = useLoaderData();
+export async function updateProjectAction({ params, request }) {
+	const formData = await request.formData();
+    console.log("form data is...");
+    console.log(formData);
+	
+	const response = await axios.put(
+		`http://localhost:8000/projects/${formData.get("id")}`,
+		{
+            name: formData.get("name"),
+            next_step: formData.get("next_step"),
+            notes: formData.get("notes"),
+            bucket: formData.get("bucket"),
+        }
+	);
+	const project = await response.data;
+	return { project };
+}
 
+
+function Project() {
     const [ isEditing, setIsEditing ] = useState(false);
+    // const [ isSaving, setIsSaving ] = useState(false);
+    const fetcher = useFetcher();    
 
-    const handleEdit = () => {
-        setIsEditing(true);
-    }
+    useEffect(() => {
+        if (fetcher.state === 'idle' && !fetcher.data) {
+            // fetcher.load(`/projects/${projectId}`)
+            fetcher.load();
+        }
 
-    const handleSave = (event) => {
-        event.preventDefault();
+		if (fetcher.state === 'submitting') {
+			setIsEditing(false);
+		}
+	}, [fetcher])
 
-        setIsEditing(false);
-        
-        const putData = {
-            name: event.target.name.value,
-            notes: event.target.notes.value,
-            bucket: project.bucket,
-            next_step: event.target.next_step.value,
-        };
+    if (!fetcher.data) return <p>loading...</p>;
 
-        axios.put(`http://localhost:8000/projects/${projectId}`, putData)
-        .then(response => {
-            setData(response.data);
-        });
-    }
+    const project = fetcher.data.project;
 
     if (isEditing) {
         return (
-             <form method='put' onSubmit={handleSave}>
-                <label>
+             <fetcher.Form method='post' action='/projects/update'>
+                <input type='hidden' name='id' value={project.id} />
+                <input type='hidden' name='bucket' value={project.bucket} />
+
+                <div><label>
                     Name:
                     <input type='text' name='name' defaultValue={project.name} />
-                </label>
+                </label></div>
                 
                 <label>
                     Next step:
@@ -58,7 +74,7 @@ function Project({projectId}) {
                 </label>
                 
                 <button type='submit'>Save</button>
-            </form>
+            </fetcher.Form>
         );
     } else {
         return (
@@ -68,7 +84,7 @@ function Project({projectId}) {
                 <div>status: {project.bucket}</div>
                 <div>next step: {project.next_step}</div>
                 <div>notes: <ReactMarkdown>{project.notes}</ReactMarkdown></div>
-                <button onClick={handleEdit}>edit</button>
+                <button onClick={() => setIsEditing(true)}>edit</button>
             </>
         );
     }

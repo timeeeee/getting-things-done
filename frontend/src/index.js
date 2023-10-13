@@ -9,8 +9,8 @@ import {
 
 import Root from './routes/root';
 import InItemList, { inItemListLoader, createInItemAction, updateInItemAction } from './routes/inItems';
-import ProjectList, { projectListLoader } from './routes/projects';
-import Project, { projectLoader } from './routes/project';
+import ProjectList, { projectListLoader, createProjectAction } from './routes/projects';
+import Project, { projectLoader, updateProjectAction } from './routes/project';
 
 import ErrorPage from './error-page';
 
@@ -40,13 +40,21 @@ const router = createBrowserRouter([
       {
         path: "/projects/",
         loader: projectListLoader,
-        element: <ProjectList />,
+        element: <ProjectList />
       },
       {
         path: "/projects/:projectId",
         loader: projectLoader,
         element: <Project />,
-      }
+      },
+      {
+        path: "/projects/update",
+        action: updateProjectAction,
+      },
+      {
+        path: "/projects/create",
+        action: createProjectAction,
+      },
     ],
   },
 ]);
