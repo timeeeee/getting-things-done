@@ -1,5 +1,8 @@
 FROM python:3.9
 
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y libpq-dev && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /code
 
 COPY ./requirements.txt /code/requirements.txt
