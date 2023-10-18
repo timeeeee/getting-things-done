@@ -1,0 +1,22 @@
+services:
+  db:
+    image: "mariadb:11"
+    environment:
+      - MARIADB_RANDOM_ROOT_PASSWORD=yes
+      - MARIADB_DATABASE
+      - MARIADB_USER
+      - MARIADB_PASSWORD
+  web:
+    build: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+  api:
+    build: backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL
+    depends_on:
+      - db
