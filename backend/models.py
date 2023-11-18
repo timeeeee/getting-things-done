@@ -21,6 +21,9 @@ class InItem(Base):
     description = Column(String(200), nullable=False)
     created_at = Column(DateTime, server_default=func.Now())
     processed_at = Column(DateTime)
+    project_id = Column(Integer, ForeignKey("project.id"), nullable=True)
+    
+    project = relationship("Project", back_populates="in_item")
 
     # when this is processed, the item could go in the trash/maybe, *or* it could become
     # associated with a project (which in turn has a bucket)
@@ -37,6 +40,8 @@ class Project(Base):
     next_step = Column(String(200))
     created_at = Column(DateTime, server_default=func.Now())
     updated_at = Column(DateTime, onupdate=func.Now())
+
+    in_item = relationship("InItem", back_populates="project")
 
 
 """
