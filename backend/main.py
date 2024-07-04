@@ -1,3 +1,4 @@
+import os
 from typing import Union, List
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -23,9 +24,7 @@ def get_db():
 
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://localhost"
+    os.environ["FRONTEND_ORIGIN"]
 ]
 
 app.add_middleware(
