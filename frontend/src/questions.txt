@@ -1,0 +1,10 @@
+I can have types for:
+  entity state
+  expected API client arguments and return values for each of CRUD?
+
+Looking ahead: better ways to keep data in sync?
+
+can fetchAllInItems be called with no arguments in a way that satisfies typescript?
+
+can EntityId type be more specific to this entity?
+(possible reference: https://github.com/reduxjs/redux-toolkit/pull/3187)`

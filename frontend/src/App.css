@@ -1,0 +1,62 @@
+body {
+  background-color: #eee;
+  color: #111;
+}
+
+.App {
+  margin: 40px;
+  width: 60%;
+  margin: 0px auto;
+}
+
+ul#in-items {
+  padding: 0px;
+}
+
+ul#in-items li {
+  list-style: none;
+  border: 1px solid gray;
+  margin: 20px 0px;
+  padding: 10px;
+  width: auto;
+}
+
+ul#in-items li button.delete {
+  float: right;
+}
+
+nav ul {
+  list-style-type: none;
+  height: 80px;
+}
+
+nav li {
+  float: left;
+  display: block;
+  margin: 20px;
+}
+
+ul#project-list {
+  li {
+    list-style-type: none;
+    margin-top: 20px;
+  }
+}
+
+.project-edit-form {
+  padding: 10px;
+  border-style: solid;
+  border-width: 1px;
+
+  input[name=name] {
+    display: block;
+  }
+
+  input[name=notes] {
+    display: block;
+  }
+
+  button.delete {
+    float: right;
+  }
+}
