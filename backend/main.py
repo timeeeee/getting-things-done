@@ -5,6 +5,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
+from dotenv import load_dotenv
+load_dotenv()
 
 from database import SessionLocal
 import crud
@@ -24,7 +26,7 @@ def get_db():
 
 
 origins = [
-    os.environ["FRONTEND_ORIGIN"]
+    os.environ.get("FRONTEND_ORIGIN", "")
 ]
 
 app.add_middleware(

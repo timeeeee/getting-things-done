@@ -4,12 +4,15 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
+from dotenv import load_dotenv
+
+load_dotenv(".env.test", override=True)
 
 from main import app, get_db
 from database import Base
 from tests.fixtures import add_test_data
 
-engine = create_engine(os.environ[TEST_DB_URL])
+engine = create_engine(os.environ["DB_URL"])
 TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -38,7 +41,7 @@ def test_client():
     Base.metadata.create_all(bind=engine)
     db = TestingSession()
     add_test_data(db)
-    db.close()
+    # db.close()
 
     try:
         yield
