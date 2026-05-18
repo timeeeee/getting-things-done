@@ -8,12 +8,24 @@ services:
       - PGUSER
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
+
+  db_test:
+    image: "postgres:16.0"
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - PGUSER
+    healthcheck:
+      test: ["CMD-SHELL", "pg_test_isready"]
+
   api:
     build: backend
     ports:
       - "8000:8000"
     environment:
       - DB_URL
+      - TEST_DB_URL
       - FRONTEND_ORIGIN
     depends_on:
       db:

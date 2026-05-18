@@ -5,8 +5,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from dotenv import load_dotenv
-load_dotenv()
 
 from database import SessionLocal
 import crud
